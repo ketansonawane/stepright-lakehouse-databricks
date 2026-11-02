@@ -91,7 +91,7 @@ def _envelope_schema(row_schema: StructType) -> StructType:
         ]
     )
 
-def read_cdc_bronze(subfolder: str, row_schema: StructType):
+def _read_cdc_bronze(subfolder: str, row_schema: StructType):
     """Shared Auto Loader read, with ingestion metadata attached, for one CDC source."""
     return (
         spark.readStream.format("cloudFiles")
@@ -107,21 +107,21 @@ def read_cdc_bronze(subfolder: str, row_schema: StructType):
     comment= "Raw Debezium CDC envelope for orders, exactly as it arrived. Not flattened yet."
 )
 def bronze_orders():
-    return read_cdc_bronze("orders_cdc", ORDERS_ROW_SCHEMA)
+    return _read_cdc_bronze("orders_cdc", ORDERS_ROW_SCHEMA)
 
 @dp.table(
     name="bronze_order_items",
     comment= "Raw Debezium CDC envelope for order_items, exactly as it arrived. Not flattened yet."
 )
 def bronze_order_items():
-    return read_cdc_bronze("order_items_cdc", ORDER_ITEMS_ROW_SCHEMA)
+    return _read_cdc_bronze("order_items_cdc", ORDER_ITEMS_ROW_SCHEMA)
 
 @dp.table(
     name="bronze_customers",
     comment= "Raw Debezium CDC envelope for customers, exactly as it arrived. Not flattened yet."
 )
 def bronze_customers():
-    return read_cdc_bronze("customers_cdc", CUSTOMER_ROW_SCHEMA)
+    return _read_cdc_bronze("customers_cdc", CUSTOMER_ROW_SCHEMA)
 
     
 
